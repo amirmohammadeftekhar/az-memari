@@ -31,14 +31,14 @@ module Control_Unit
     input T7,
     input T8,
     input T9,
-    //input T10,
-    //input T11,
+    input T10,
+    input T11,
     //input T12,
     //input T13,
     //input T14,
     //input T15,
     // Decoded Operator
-    input D0,
+    input D0, 
     input D1,
     input D2,
     input D3,
@@ -151,7 +151,7 @@ assign Memory_Write = ((R & T1) | (D3 & T6) | (D5 & T6) | (D6 & T9));
 
 // Registers Controls
 // AC
-assign AC_LD  = ((D0 & T8) | (D1 & T8) | (D2 & T8) | (r & IR[7]) | (r & IR[6]) | (p & IR[11]));
+assign AC_LD  = ((D0 & T11) | (D1 & T8) | (D2 & T8) | (r & IR[7]) | (r & IR[6]) | (p & IR[11]));
 assign AC_INR = (r & IR[5]);
 assign AC_CLR = (r & IR[11]);
 assign AC_NOT = (r & IR[9]);
@@ -200,12 +200,12 @@ assign FGI_RESET = (p & IR[11]);
 assign FGO_RESET = (p & IR[10]);
 
 // Sequence Counter Reset
-assign Sequence_Counter_Reset = ((R & T2) | (D0 & T8) | (D1 & T8) | (D2 & T8) | (D3 & T6) |
+assign Sequence_Counter_Reset = ((R & T2) | (D0 & T11) | (D1 & T8) | (D2 & T8) | (D3 & T6) |
                                 (D4 & T6) | (D5 & T7) | (D6 & T9) | (r) | (p));
  // ALU Select
-assign ALU_Select[2] = ((D2 & T8) | (r & IR[7]) | (r & IR[6]) | (p & IR[11]));
-assign ALU_Select[1] = ((D0 & T8) | (D1 & T8) | (D2 & T8) | (p & IR[11]));
-assign ALU_Select[0] = ((D1 & T8) | (D2 & T8) | (r & IR[6]));
+assign ALU_Select[2] = ((D2 & T8) | (r & IR[7]) | (r & IR[6]) | (p & IR[11]) | (D0 & T7));
+assign ALU_Select[1] = ((D1 & T8) | (D2 & T8) | (p & IR[11]) | (D0 & T7));
+assign ALU_Select[0] = ((D1 & T8) | (D2 & T8) | (r & IR[6]) | (D0 & T7));
 
 // ALU Select
 assign BUS_Select[2] = ((D3 & T6) | (p & IR[10]) | ((~R) & T3) | (R & T1) |

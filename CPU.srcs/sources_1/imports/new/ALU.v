@@ -8,6 +8,7 @@ module ALU
     parameter Data_Width = 16
 )
 (
+    input Clock,
     // Operation Select
     input [2 : 0] Operation_Select,
     
@@ -31,6 +32,55 @@ module ALU
 // Outputs Variable Temporary
 reg                        E_Out_Temp;
 reg [(Data_Width - 1) : 0] Out_Temp;
+
+wire                        div_valid;
+wire [(Data_Width - 1) : 0] div_dividend;
+wire [(Data_Width - 1) : 0] div_divisor;
+wire [(Data_Width - 1) : 0] div_quotient;
+wire [(Data_Width - 1) : 0] div_remainder;
+wire                        div_result_valid;
+
+// Division control
+reg div_start;
+reg [(Data_Width - 1) : 0] div_result_reg;
+reg div_operation_active;
+
+div_gen_0 divider_ip (
+    .aclk(Clock),                        
+    .s_axis_dividend_tvalid(div_valid),   
+    .s_axis_dividend_tdata(div_dividend), 
+    .s_axis_divisor_tvalid(div_valid),    
+    .s_axis_divisor_tdata(div_divisor),   
+    .m_axis_dout_tvalid(div_result_valid), 
+    .m_axis_dout_tdata({div_remainder, div_quotient}) 
+);
+
+// Division control logic
+always @(posedge Clock)
+begin
+    // Start division when operation select is 111 (DIV)
+    if (Operation_Select == 3'b111)
+    begin
+        div_start <= 1'b1;
+        div_operation_active <= 1'b1;
+    end
+    else
+    begin
+        div_start <= 1'b0;
+    end
+    
+    // Store result when valid
+    if (div_result_valid)
+    begin
+        div_result_reg <= div_quotient;
+        div_operation_active <= 1'b0;
+    end
+end
+
+// Assign divider inputs
+assign div_valid = div_start;
+assign div_dividend = Inp_2;  // AC (Accumulator)
+assign div_divisor = Inp_1;   // DR (Memory data)
 
 // Combinational Circuit
 always @(*)
@@ -85,10 +135,17 @@ begin
             Out_Temp[7 : 0] = Inp_0;
         end
         
-        // PASS 2 (AC <- DR)
+       // DIV (AC <- AC / DR)
         3'b111:
         begin
-            Out_Temp = Inp_1;
+            if (div_result_valid || (!div_operation_active))
+            begin
+                Out_Temp = div_result_reg;  // Return quotient
+            end
+            else
+            begin
+                Out_Temp = Inp_2;  // Return AC unchanged during division
+            end
         end
         
         // Defaults

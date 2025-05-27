@@ -111,8 +111,8 @@ reg Sequence_Counter_T6;
 reg Sequence_Counter_T7;
 reg Sequence_Counter_T8;
 reg Sequence_Counter_T9;
-//reg Sequence_Counter_T10;
-//reg Sequence_Counter_T11;
+reg Sequence_Counter_T10;
+reg Sequence_Counter_T11;
 //reg Sequence_Counter_T12;
 //reg Sequence_Counter_T13;
 //reg Sequence_Counter_T14;
@@ -169,8 +169,8 @@ Control_Unit_Module
     .T7(Sequence_Counter_T7),
     .T8(Sequence_Counter_T8),
     .T9(Sequence_Counter_T9),
-    //.T10(Sequence_Counter_T10),
-    //.T11(Sequence_Counter_T11),
+    .T10(Sequence_Counter_T10),
+    .T11(Sequence_Counter_T11),
     //.T12(Sequence_Counter_T12),
     //.T13(Sequence_Counter_T13),
     //.T14(Sequence_Counter_T14),
@@ -250,6 +250,7 @@ ALU
 )
 ALU_Module
 (
+    .Clock(Clock),
     // Operation Select
     .Operation_Select(ALU_Module_Operation_Select),
     
@@ -554,8 +555,8 @@ begin
     Sequence_Counter_T7  = 1'b0;
     Sequence_Counter_T8  = 1'b0;
     Sequence_Counter_T9  = 1'b0;
-    //Sequence_Counter_T10 = 1'b0;
-    //Sequence_Counter_T11 = 1'b0;
+    Sequence_Counter_T10 = 1'b0;
+    Sequence_Counter_T11 = 1'b0;
     //Sequence_Counter_T12 = 1'b0;
     //Sequence_Counter_T13 = 1'b0;
     //Sequence_Counter_T14 = 1'b0;
@@ -623,16 +624,16 @@ begin
         end
         
         // Active T10
-        //5'b11010:
-        //begin
-            //Sequence_Counter_T10 = 1'b1;
-        //end
+        5'b11010:
+        begin
+            Sequence_Counter_T10 = 1'b1;
+        end
         
         // Active T11
-        //5'b11011:
-        //begin
-            //Sequence_Counter_T11 = 1'b1;
-        //end
+        5'b11011:
+        begin
+            Sequence_Counter_T11 = 1'b1;
+        end
         
         // Active T12
         //5'b11100:
@@ -671,8 +672,8 @@ begin
             Sequence_Counter_T7  = 1'b0;
             Sequence_Counter_T8  = 1'b0;
             Sequence_Counter_T9  = 1'b0;
-            //Sequence_Counter_T10 = 1'b0;
-            //Sequence_Counter_T11 = 1'b0;
+            Sequence_Counter_T10 = 1'b0;
+            Sequence_Counter_T11 = 1'b0;
             //Sequence_Counter_T12 = 1'b0;
             //Sequence_Counter_T13 = 1'b0;
             //Sequence_Counter_T14 = 1'b0;
